@@ -1,0 +1,87 @@
+<!--html><body><h2>Service context root</h2><script type="text/javascript">document.write(location.href);</script><p><a href="rest/helloworld">About</a>
+<p><a href="rest/helloworld/list">List</a></body></html-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Insert title here</title>
+        <script src="./js/jquery.js"></script>
+        <script src="./js/three.min.js"></script>
+        <script src="./js/mightygumball.js"></script>
+        <script>
+            $(document).ready(function() {
+                onLoad();
+            });
+        </script>
+        <script>
+            function out(outStr) // cheap and dirty output function
+            {
+                document.getElementById("out").innerHTML += "<br>" + outStr;
+            }
+
+            function handleResponse(req) {
+                if (req.readyState == 0) {
+                    out("UNITIALIZED");
+                }
+                else if (req.readyState == 1) {
+                    out("LOADING");
+                }
+                else if (req.readyState == 2) {
+                    out("LOADED");
+                }
+                else if (req.readyState == 3) {
+                    out("INTERACTIVE");
+                }
+                else if (req.readyState == 4) {
+                    out("COMPLETE");
+                    out("STATUS " + req.status);
+                    if (req.status == 200 || req.status == 0) {
+                        alert("OK");
+                        //	for (var i = 0; i < data.length; i++) {
+                        //		out("Type ->"+data[i].type);
+                        //	}
+                        out(req.responseText);
+                    }
+                }
+            }
+
+            function createRequestObject() {
+                var req = null
+                if (window.XMLHttpRequest) {
+                    req = new XMLHttpRequest();
+                } else if (window.ActiveXObject) {
+                    req = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                return req;
+            }
+
+            function makeRequest()
+            {
+                var req = createRequestObject();
+                try {
+                    var url = "rest/helloworld/list"; //Firefox Requires Same origin policy
+                    //"http://localhost:9998/jsonfromjaxb/aircrafts";
+                    out("Opening service...");
+                    req.onreadystatechange = function() {
+                        handleResponse(req);
+                    };
+                    //req.overrideMimeType('application/json');
+
+                    req.open("GET", url, true);
+                    req.setRequestHeader('Accept', 'application/json');
+                    out("Sending service request...");
+                    req.send(null);
+                    out("Done");
+                }
+                catch (err) {
+                    out("ERROR: " + err.description);
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div onclick="makeRequest();">test<br></div>
+        <div id="out">Output Here</div>
+        <div id="sales"></div>
+    </body>
+</html>
