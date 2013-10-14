@@ -7,7 +7,7 @@ function out(outStr) // cheap and dirty output function
 }
 
 function onLoad(){
-	var url = "http://localhost:8080/jerseydemo/rest/helloworld/list";
+	var url = "rest/helloworld/list";
 	var request = new XMLHttpRequest();
 	out("Opening service...");
 	request.onload = function() { updateSales( request ); };
